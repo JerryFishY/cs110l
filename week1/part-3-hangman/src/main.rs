@@ -34,7 +34,39 @@ fn main() {
     // secret_word by doing secret_word_chars[i].
     let secret_word_chars: Vec<char> = secret_word.chars().collect();
     // Uncomment for debugging:
-    // println!("random word: {}", secret_word);
+    println!("random word: {}", secret_word);
 
     // Your code here! :)
+    let n: usize = secret_word.len();
+    println!("Welcome to CS110L Hangman! ");
+    let mut guessed_answer: String = String::from("-".repeat(n));
+    let mut guessed_letters: String = String::from("");
+    let mut cnt: i32 = 5;
+    let mut stovec: Vec<Vec<i32>> =  vec![Vec::new(); 26];
+    for i in 0..(n-1){
+        let position = (secret_word_chars[i] as u8) - ('a' as u8)
+        stovec[position].insert(i);
+    }
+    loop{
+
+    println!("The word so far is {}",guessed_answer);
+    println!("You have guessed the following letters: {}",guessed_letters);
+    println!("You have {} guesses left", cnt);
+    print!("Please guess a letter: ");
+    // Make sure the prompt from the previous line gets displayed:
+    io::stdout()
+        .flush()
+        .expect("Error flushing stdout.");
+    let mut guess = String::new();
+    io::stdin()
+        .read_line(&mut guess)
+        .expect("Error reading line.");
+    guess = String::from(guess.trim());
+    if(guessed_letters.contains(&guess)){
+        println!("This letter has been guessed!");
+        continue;
+    }
+    guessed_letters=guessed_letters+guess.as_str();
+    
+    }
 }
