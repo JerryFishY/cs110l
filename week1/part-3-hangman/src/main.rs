@@ -41,14 +41,34 @@ fn main() {
     println!("Welcome to CS110L Hangman! ");
     let mut guessed_answer: String = String::from("-".repeat(n));
     let mut guessed_letters: String = String::from("");
-    let mut cnt: i32 = 5;
+    let mut cnt: u32 = NUM_INCORRECT_GUESSES;
     let mut stovec: Vec<Vec<i32>> =  vec![Vec::new(); 26];
-    for i in 0..(n-1){
-        let position = (secret_word_chars[i] as u8) - ('a' as u8)
-        stovec[position].insert(i);
+    let mut correct_cnt = n;
+    // To 
+    for i in 0..(n){
+        // println!("i is {}",i);
+        let position = (secret_word_chars[i] as u8) - ('a' as u8);
+        stovec[position as usize].push(i as i32);
     }
+    // for i in 0..26{
+    //     println!("the alphabet: {}",i);
+    //     if stovec[i].len()>0{
+    //         for j in 0..(stovec[i].len()){
+    //             println!("stovec: {}",stovec[i][j]);
+    //         }
+    //     }
+    // }
+    //The main loop
     loop{
-
+    if  correct_cnt == 0 {
+        println!("Congratulations you guessed the secret word: {}",secret_word);
+        break;
+    }
+    if cnt == 0 {
+        println!("Sorry, you ran out of guesses!");
+        break;
+    }
+    
     println!("The word so far is {}",guessed_answer);
     println!("You have guessed the following letters: {}",guessed_letters);
     println!("You have {} guesses left", cnt);
@@ -62,11 +82,24 @@ fn main() {
         .read_line(&mut guess)
         .expect("Error reading line.");
     guess = String::from(guess.trim());
-    if(guessed_letters.contains(&guess)){
+    if guessed_letters.contains(&guess) {
         println!("This letter has been guessed!");
         continue;
     }
     guessed_letters=guessed_letters+guess.as_str();
-    
+    let guessed_pos = (guess.chars().next().unwrap() as u8) - ('a' as u8);
+    if stovec[guessed_pos as usize].is_empty() {
+        println!("Sorry, that letter is not in the word");
+        cnt=cnt-1;
+    }
+    else{
+        correct_cnt = correct_cnt - stovec[guessed_pos as usize].len();
+
+        for &idx in stovec[guessed_pos as usize].iter() {
+            let idx_usize = idx as usize; // Ensure idx is usize
+            guessed_answer.replace_range(idx_usize..idx_usize + 1, &guess);
+        }
+        // println!("Correct cnt is: {}",correct_cnt);
+    }
     }
 }
