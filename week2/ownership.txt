@@ -10,6 +10,7 @@ fn main() {
 }
 ```
 
+No, s is already borrowed;
 
 
 Example 2:
@@ -20,7 +21,7 @@ fn drip_drop() -> &String {
 }
 ```
 
-
+No, the returned pointer is a dangling one
 
 Example 3:
 ```
@@ -32,3 +33,5 @@ fn main() {
     println!("{}", s2);
 }
 ```
+
+No, can not move out the index
